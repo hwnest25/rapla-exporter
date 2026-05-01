@@ -1,6 +1,6 @@
 # rapla-exporter
 
-Exports the DHBW New Study Rapla lecture calendar to the iCalendar format (`.ics`) so it can be imported into or subscribed to from any calendar app, including Microsoft Outlook, Google Calendar, and Apple Calendar.
+Exports the DHBW New Study Rapla lecture calendar to the iCalendar format (`.ics`) so it can be imported into or subshttps://github.tools.sap/I767824/rapla-exporter/blob/main/README.mdcribed to from any calendar app, including Microsoft Outlook, Google Calendar, and Apple Calendar.
 
 DHBW provides timetables through [Rapla](https://rapla.dhbw.de), a web-based scheduling system. Rapla does not expose a public iCal subscription URL for student calendars, so this tool scrapes the HTML calendar view and converts it to a standards-compliant `.ics` feed.
 
@@ -91,19 +91,26 @@ rapla-exporter/
 
 ## How it Works & Relevant Computer Science Concepts
 
-1. **Web Scraping and HTTP Requests:** `scraper.py` sends an HTTP GET request to `rapla.dhbw.de` with the cohort's user and file parameters. No official API exists, so we fetch the raw HTML the browser would normally render.
+### 1. **Web Scraping and HTTP Requests:** 
+`scraper.py` sends an HTTP GET request to `rapla.dhbw.de` with the cohort's user and file parameters. No official API exists, so we fetch the raw HTML the browser would normally render.
 
-2. **HTML/DOM Parsing and Table Geometry:** BeautifulSoup parses the HTML table. Each lecture is a `<td class="week_block">` cell. The date is inferred from the cell's column position relative to the week header row. The duration is inferred from the cell's `rowspan` value (each row represents 15 minutes). Because cells can span multiple rows and columns, the parser reconstructs the full 2D grid to correctly assign dates and durations.
+### 2. **HTML/DOM Parsing and Table Geometry:** 
+BeautifulSoup parses the HTML table. Each lecture is a `<td class="week_block">` cell. The date is inferred from the cell's column position relative to the week header row. The duration is inferred from the cell's `rowspan` value (each row represents 15 minutes). Because cells can span multiple rows and columns, the parser reconstructs the full 2D grid to correctly assign dates and durations.
 
-3. **Regex:** Times are embedded as plain text inside each cell (e.g. `08:30 -10:00`). A regular expression extracts the start and end time regardless of minor spacing variations.
+### 3. **Regex:** 
+Times are embedded as plain text inside each cell (e.g. `08:30 -10:00`). A regular expression extracts the start and end time regardless of minor spacing variations.
 
-4. **Timezones and Aware Datetimes:** `exporter.py` attaches the `Europe/Berlin` timezone to every event using `pytz`. This handles daylight saving time transitions automatically, so Outlook always displays the correct local time.
+### 4. **Timezones and Aware Datetimes:** 
+`exporter.py` attaches the `Europe/Berlin` timezone to every event using `pytz`. This handles daylight saving time transitions automatically, so Outlook always displays the correct local time.
 
-5. **iCalendar Standard (RFC 5545):** Events are written as `VEVENT` blocks inside a `VCALENDAR` envelope. This is the open standard that Outlook, Google Calendar, and Apple Calendar all understand.
+### 5. **iCalendar Standard (RFC 5545):** 
+Events are written as `VEVENT` blocks inside a `VCALENDAR` envelope. This is the open standard that Outlook, Google Calendar, and Apple Calendar all understand.
 
-6. **Deterministic UUIDs:** Each event's UID is derived from its title and start time using UUID version 5. Re-running the tool produces identical UIDs for unchanged events, preventing duplicate imports.
+### 6. **Deterministic UUIDs:** 
+Each event's UID is derived from its title and start time using UUID version 5. Re-running the tool produces identical UIDs for unchanged events, preventing duplicate imports.
 
-7. **Client/Server Model and the HTTP Request/Response Cycle:** `server.py` runs a persistent local HTTP server. Outlook acts as the client, polling `http://localhost:8080/calendar.ics` on a schedule. Each request triggers a fresh scrape of Rapla and returns the result as an HTTP response with `Content-Type: text/calendar`.
+### 7. **Client/Server Model and the HTTP Request/Response Cycle:** 
+`server.py` runs a persistent local HTTP server. Outlook acts as the client, polling `http://localhost:8080/calendar.ics` on a schedule. Each request triggers a fresh scrape of Rapla and returns the result as an HTTP response with `Content-Type: text/calendar`.
 
 ---
 
