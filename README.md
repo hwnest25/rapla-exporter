@@ -7,7 +7,6 @@ DHBW provides timetables through [Rapla](https://rapla.dhbw.de), a web-based sch
 ---
 
 ## Requirements
-
 - Python 3.9 or later
 - The dependencies listed in `requirements.txt`
 
@@ -19,12 +18,11 @@ pip install -r requirements.txt
 
 ---
 
-## Usage
+## Usage (There are two modes): 
+1. One-time file export
+2. Live server.
 
-There are two modes: a one-time file export and a live server.
-
-### One-time export
-
+### 1. One-time export
 Scrapes the calendar and writes a `.ics` file you can import manually.
 
 ```bash
@@ -37,12 +35,12 @@ python3 main.py --weeks 12 --start-date 2026-01-09 --output dhbw_tinfo25.ics
 | `--start-date YYYY-MM-DD` | Today | First week to include |
 | `--output FILE` | `dhbw_tinfo25.ics` | Output filename |
 
-To import into Outlook: double-click the `.ics` file, or go to **File > Open & Export > Import/Export > Import an iCalendar file**.
+#### To import into Outlook: 
+Double-click the `.ics` file, or go to **File > Open & Export > Import/Export > Import an iCalendar file**.
 
-Note: One-time imports are static. If Rapla is updated after you import, your calendar will not reflect the change. Use the live server below for automatic updates.
+**Note:** One-time imports are static. If Rapla is updated after you import, your calendar will not reflect the change. Use the live server below for automatic updates.
 
-### Live server (recommended)
-
+### 2. Live server (recommended):
 Runs a local HTTP server. Outlook subscribes to it and polls for updates automatically, so any change in Rapla appears in your calendar within a few hours.
 
 ```bash
@@ -55,15 +53,13 @@ python3 server.py --weeks 12 --start-date 2026-01-09
 | `--weeks N` | `12` | Number of weeks to include in the feed |
 | `--start-date YYYY-MM-DD` | Today | First week to include |
 
-The server prints a URL when it starts:
-
+#### The server prints a URL when it starts:
 ```
 Rapla live server started.
   Calendar URL : http://localhost:8080/calendar.ics
 ```
 
-#### Subscribing in Outlook
-
+#### Subscribing in Outlook:
 1. Open Outlook.
 2. Go to **File > Account Settings > Account Settings**.
 3. Select the **Internet Calendars** tab.
