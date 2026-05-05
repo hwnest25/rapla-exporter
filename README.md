@@ -35,7 +35,7 @@ python3 main.py --weeks 12 --start-date 2026-01-09 --output dhbw_tinfo25.ics
 | `--start-date YYYY-MM-DD` | Today | First week to include |
 | `--output FILE` | `dhbw_tinfo25.ics` | Output filename |
 
-#### To import into Outlook: 
+#### To import into your calendar application (Outlook, Google Calendar, Apple Calendar, etc): 
 Double-click the `.ics` file, or go to **File > Open & Export > Import/Export > Import an iCalendar file**.
 
 **Note:** One-time imports are static. If Rapla is updated after you import, your calendar will not reflect the change. Use the live server below for automatic updates.
