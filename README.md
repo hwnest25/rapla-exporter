@@ -62,11 +62,14 @@ Rapla live server started.
 ```
 
 #### Subscribing in Outlook:
+The exact steps vary by Outlook version. In classic Outlook:
 1. Open Outlook.
 2. Go to **File > Account Settings > Account Settings**.
 3. Select the **Internet Calendars** tab.
 4. Click **New** and paste the URL: `http://localhost:8080/calendar.ics`
 5. Click **Add**, then **Close**.
+
+**Note:** If the Internet Calendars tab is not visible, the current organizational IT policy may have disabled external calendar subscriptions. In that case, use the one-time export instead.
 
 Outlook will poll the URL roughly every hour while the server is running. Every poll triggers a fresh scrape of Rapla, so cancelled or rescheduled lectures are reflected automatically.
 
