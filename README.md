@@ -82,7 +82,7 @@ The server must be running on your laptop for Outlook to sync. Start it before o
 ```
 rapla-exporter/
 ├── main.py          — CLI entry point for one-time export
-├── server.py        — Local HTTP server for live Outlook subscription
+├── server.py        — Local HTTP server for live calendar subscription
 ├── scraper.py       — Fetches and parses the Rapla HTML calendar
 ├── exporter.py      — Converts parsed events to RFC 5545 iCalendar format
 └── requirements.txt — Python dependencies
