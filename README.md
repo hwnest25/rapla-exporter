@@ -41,7 +41,9 @@ Double-click the `.ics` file, or go to **File > Open & Export > Import/Export > 
 **Note:** One-time imports are static. If Rapla is updated after you import, your calendar will not reflect the change. Use the live server below for automatic updates.
 
 ### 2. Live server (recommended):
-Runs a local HTTP server. Outlook subscribes to it and polls for updates automatically, so any change in Rapla appears in your calendar within a few hours.
+Rapla does not provide an iCalendar subscription URL, so calendar apps like Outlook, Google Calendar, and Apple Calendar have no way to subscribe directly. This mode solves that by running a local HTTP server that exposes a subscription URL (`http://localhost:8080/calendar.ics`) which calendar apps can subscribe to and poll for updates automatically. Any change in Rapla then appears in your calendar within a few hours.
+
+**Important:** Simply opening the URL in a browser does nothing useful. The URL must be added as a calendar subscription (see instructions below). The server must also be running on your laptop whenever you want your calendar to sync.
 
 ```bash
 python3 server.py --weeks 12 --start-date 2026-01-09
