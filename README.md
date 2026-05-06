@@ -36,14 +36,14 @@ python3 main.py --weeks 12 --start-date 2026-01-09 --output dhbw_tinfo25.ics
 | `--output FILE` | `dhbw_tinfo25.ics` | Output filename |
 
 #### To import into your calendar application (Outlook, Google Calendar, Apple Calendar, etc): 
-Double-click the `.ics` file, or go to **File > Open & Export > Import/Export > Import an iCalendar file**.
+- Double-click the `.ics` file, or go to **File > Open & Export > Import/Export > Import an iCalendar file**.
 
-**Note:** One-time imports are static. If Rapla is updated after you import, your calendar will not reflect the change. Use the live server below for automatic updates.
+**Note:** One-time imports are static. If Rapla is updated after you import, your calendar will not reflect the change. Use the live server mode/options below if you prefer automatic updates.
 
 ### 2. Live server (recommended):
 Rapla does not provide an iCalendar subscription URL, so calendar apps like Outlook, Google Calendar, and Apple Calendar have no way to subscribe directly. This mode solves that by running a local HTTP server that exposes a subscription URL (`http://localhost:8080/calendar.ics`) which calendar apps can subscribe to and poll for updates automatically. Any change in Rapla then appears in your calendar within a few hours.
 
-**Important:** Simply opening the URL in a browser does nothing useful. The URL must be added as a calendar subscription (see instructions below). The server must also be running on your laptop whenever you want your calendar to sync.
+**Important:** Simply opening the URL in a browser does nothing useful. The URL must be added as a calendar subscription (see instructions below). ***The server must also be running on your laptop whenever you want your calendar to sync.
 
 ```bash
 python3 server.py --weeks 12 --start-date 2026-01-09
@@ -69,11 +69,11 @@ The exact steps vary by Outlook version. In classic Outlook:
 4. Click **New** and paste the URL: `http://localhost:8080/calendar.ics`
 5. Click **Add**, then **Close**.
 
-**Note:** If the Internet Calendars tab is not visible, the current organizational IT policy may have disabled external calendar subscriptions. In that case, use the one-time export instead.
+**Note:** If the Internet Calendars tab is not visible, the current organizational IT policy may have disabled external calendar subscriptions. In that case, use the one-time export option (Mode 1) instead.
 
-Outlook will poll the URL roughly every hour while the server is running. Every poll triggers a fresh scrape of Rapla, so cancelled or rescheduled lectures are reflected automatically.
+In the Live Server Mode, Outlook or your calendar of choice, will poll the URL roughly every hour while the server is running. Every poll triggers a fresh scrape of Rapla, so cancelled or rescheduled lectures are reflected automatically.
 
-The server must be running on your laptop for Outlook to sync. Start it before opening Outlook, or leave it running in a terminal session.
+**NOTE:** The server must be running on your laptop for your calendar to sync. Start the server before opening Outlook (Google Calendar, or Apple Calendar), or leave it running in a terminal session.
 
 ---
 
@@ -117,6 +117,6 @@ Each event's UID is derived from its title and start time using UUID version 5. 
 
 ## Limitations
 
-- The server must be running on your machine for Outlook to sync. It is not a hosted service.
+- The server must be running on your machine for your Outlook or other calendar of choice to sync. It is not a hosted service.
 - If Rapla's HTML structure changes, the parser may need to be updated.
 - The calendar user and file name are currently hardcoded in `scraper.py` for the TINFO25 cohort. To use with a different cohort, update `DEFAULT_USER` and `DEFAULT_FILE` at the top of that file.
