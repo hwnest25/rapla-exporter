@@ -1,6 +1,6 @@
 # rapla-exporter
 
-Exports the DHBW New Study Rapla lecture calendar to the iCalendar format (`.ics`) so it can be imported into or subshttps://github.tools.sap/I767824/rapla-exporter/blob/main/README.mdcribed to from any calendar app, including Microsoft Outlook, Google Calendar, and Apple Calendar.
+Exports the DHBW New Study Rapla lecture calendar to the iCalendar format (`.ics`) so it can be imported into or subscribed to from any calendar app, including Microsoft Outlook, Google Calendar, and Apple Calendar.
 
 DHBW provides timetables through [Rapla](https://rapla.dhbw.de), a web-based scheduling system. Rapla does not expose a public iCal subscription URL for student calendars, so this tool scrapes the HTML calendar view and converts it to a standards-compliant `.ics` feed.
 
