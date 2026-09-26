@@ -106,6 +106,7 @@ def _parse_date_headers(soup: BeautifulSoup, reference_year: int) -> dict[int, d
 
     col_idx = 0
     prev_month = None
+    current_year = reference_year
 
     for cell in header_row.find_all(["th", "td"]):
         colspan = int(cell.get("colspan", 1))
@@ -117,11 +118,10 @@ def _parse_date_headers(soup: BeautifulSoup, reference_year: int) -> dict[int, d
                 day, month = int(match.group(1)), int(match.group(2))
                 # Handle year wrap: If month goes from 12 back to 1 within the
                 # same week (e.g. a week spanning Dec 29 to Jan 4), increment
-                # the year for the January dates.
-                year = reference_year
+                # the year for all remaining dates in this week.
                 if prev_month == 12 and month == 1:
-                    year += 1
-                col_to_date[col_idx] = date(year, month, day)
+                    current_year += 1
+                col_to_date[col_idx] = date(current_year, month, day)
                 prev_month = month
 
         col_idx += colspan
@@ -134,7 +134,7 @@ def _parse_date_headers(soup: BeautifulSoup, reference_year: int) -> dict[int, d
 # ---------------------------------------------------------------------------
 
 def _parse_event_cell(cell, col_to_date: dict[int, date], cell_col: int) -> dict | None:
-    """
+    r"""
     Parse a single <td class="week_block"> into an event dict.
 
     CS Concept --> Regex: The cell's anchor text looks like

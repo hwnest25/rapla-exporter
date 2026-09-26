@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head><title>Rapla fixture</title></head>
+<body>
+<!--
+  Minimal Rapla HTML fixture for unit tests.
+  Represents the week of Mon 2026-04-27 to Fri 2026-05-01.
+
+  Column layout (after header row):
+    col 0        = time label (week_separatorcell)
+    col 1,2,3    = Mon 27.04. (3 sub-cols for overlapping events)
+    col 4,5,6    = Tue 28.04.
+    col 7,8,9    = Wed 29.04.
+    col 10,11,12 = Thu 30.04.
+    col 13,14,15 = Fri 01.05.
+
+  Events:
+    E1: Lineare Algebra, Mon 27.04., 08:00-10:00, room A101
+        col 1, rowspan=8 (8 x 15 min = 2 h)
+    E2: Programmieren,   Tue 28.04., 09:00-11:00, room B202
+        col 4, rowspan=8
+
+  Critically: in rows 1-7 (08:00–09:45), E1's rowspan means cols 1-3 are
+  occupied by the spanning cell — those <td>s do NOT appear in those rows.
+  In rows 4-11 (09:00–10:45), the same applies to E2 at cols 4-6.
+
+  We include only the cells that actually appear in the HTML (as a browser
+  would render it), omitting the cells swallowed by rowspan.
+-->
+<table class="week_table">
+  <tbody>
+    <!-- Row 0: header -->
+    <tr>
+      <th class="week_number">KW 18</th>
+      <td class="week_header" colspan="3"><nobr>Mo 27.04.</nobr></td>
+      <td class="week_header" colspan="3"><nobr>Di 28.04.</nobr></td>
+      <td class="week_header" colspan="3"><nobr>Mi 29.04.</nobr></td>
+      <td class="week_header" colspan="3"><nobr>Do 30.04.</nobr></td>
+      <td class="week_header" colspan="3"><nobr>Fr 01.05.</nobr></td>
+    </tr>
+    <!-- Row 1: 08:00 — E1 starts here at col 1 -->
+    <tr>
+      <td class="week_separatorcell">08:00</td>
+      <td class="week_block" rowspan="8">
+        <a href="#">08:00 - 10:00&#10;Lineare Algebra</a>
+        <span class="resource">A101</span>
+      </td>
+      <!-- cols 2,3 (Mon sub-cols 2 and 3) -->
+      <td></td><td></td>
+      <!-- cols 4,5,6 Tue -->
+      <td></td><td></td><td></td>
+      <!-- cols 7,8,9 Wed -->
+      <td></td><td></td><td></td>
+      <!-- cols 10,11,12 Thu -->
+      <td></td><td></td><td></td>
+      <!-- cols 13,14,15 Fri -->
+      <td></td><td></td><td></td>
+    </tr>
+    <!-- Rows 2-4: 08:15, 08:30, 08:45 — E1 rowspan active (col 1 absent) -->
+    <tr>
+      <td class="week_separatorcell">08:15</td>
+      <td></td><td></td>
+      <td></td><td></td><td></td>
+      <td></td><td></td><td></td>
+      <td></td><td></td><td></td>
+      <td></td><td></td><td></td>
+    </tr>
+    <tr>
+      <td class="week_separatorcell">08:30</td>
+      <td></td><td></td>
+      <td></td><td></td><td></td>
+      <td></td><td></td><td></td>
+      <td></td><td></td><td></td>
+      <td></td><td></td><td></td>
+    </tr>
+    <tr>
+      <td class="week_separatorcell">08:45</td>
+      <td></td><td></td>
+      <td></td><td></td><td></td>
+      <td></td><td></td><td></td>
+      <td></td><td></td><td></td>
+      <td></td><td></td><td></td>
+    </tr>
+    <!-- Row 5: 09:00 — E2 starts here at col 4; E1 rowspan still active -->
+    <tr>
+      <td class="week_separatorcell">09:00</td>
+      <!-- col 1 absent (E1 rowspan) -->
+      <!-- cols 2,3 -->
+      <td></td><td></td>
+      <td class="week_block" rowspan="8">
+        <a href="#">09:00 - 11:00&#10;Programmieren</a>
+        <span class="resource">B202</span>
+      </td>
+      <!-- cols 5,6 -->
+      <td></td><td></td>
+      <!-- cols 7,8,9 Wed -->
+      <td></td><td></td><td></td>
+      <!-- cols 10,11,12 Thu -->
+      <td></td><td></td><td></td>
+      <!-- cols 13,14,15 Fri -->
+      <td></td><td></td><td></td>
+    </tr>
+    <!-- Rows 6-8: 09:15, 09:30, 09:45 — both rowspans active -->
+    <tr>
+      <td class="week_separatorcell">09:15</td>
+      <td></td><td></td>
+      <td></td><td></td>
+      <td></td><td></td><td></td>
+      <td></td><td></td><td></td>
+      <td></td><td></td><td></td>
+    </tr>
+    <tr>
+      <td class="week_separatorcell">09:30</td>
+      <td></td><td></td>
+      <td></td><td></td>
+      <td></td><td></td><td></td>
+      <td></td><td></td><td></td>
+      <td></td><td></td><td></td>
+    </tr>
+    <tr>
+      <td class="week_separatorcell">09:45</td>
+      <td></td><td></td>
+      <td></td><td></td>
+      <td></td><td></td><td></td>
+      <td></td><td></td><td></td>
+      <td></td><td></td><td></td>
+    </tr>
+    <!-- Row 9: 10:00 — E1 rowspan ends; E2 still active -->
+    <tr>
+      <td class="week_separatorcell">10:00</td>
+      <td></td><td></td><td></td>
+      <!-- col 4 absent (E2 rowspan) -->
+      <td></td><td></td>
+      <td></td><td></td><td></td>
+      <td></td><td></td><td></td>
+      <td></td><td></td><td></td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head><title>Rapla year-wrap fixture</title></head>
+<body>
+<!--
+  Fixture for the year-wrap edge case: a week that spans Dec→Jan.
+  Mon 29.12. (2025), Tue 30.12., Wed 31.12., Thu 01.01. (2026), Fri 02.01. (2026)
+
+  The parser must increment the year once month wraps from 12 → 1.
+
+  One event: Einführung, Thu 01.01.2026, 10:00-12:00, room C303
+    col 0  = <th class="week_number">
+    col 1  = Mon 29.12.  (colspan=3)
+    col 4  = Tue 30.12.  (colspan=3)
+    col 7  = Wed 31.12.  (colspan=3)
+    col 10 = Thu 01.01.  (colspan=3)  <-- new year
+    col 13 = Fri 02.01.  (colspan=3)
+-->
+<table class="week_table">
+  <tbody>
+    <tr>
+      <th class="week_number">KW 1</th>
+      <td class="week_header" colspan="3"><nobr>Mo 29.12.</nobr></td>
+      <td class="week_header" colspan="3"><nobr>Di 30.12.</nobr></td>
+      <td class="week_header" colspan="3"><nobr>Mi 31.12.</nobr></td>
+      <td class="week_header" colspan="3"><nobr>Do 01.01.</nobr></td>
+      <td class="week_header" colspan="3"><nobr>Fr 02.01.</nobr></td>
+    </tr>
+    <tr>
+      <td class="week_separatorcell">10:00</td>
+      <!-- Mon, Tue, Wed empty -->
+      <td></td><td></td><td></td>
+      <td></td><td></td><td></td>
+      <td></td><td></td><td></td>
+      <!-- Thu 01.01.2026 event -->
+      <td class="week_block" rowspan="8" colspan="1">
+        <a href="#">10:00 - 12:00&#10;Einführung</a>
+        <span class="resource">C303</span>
+      </td>
+      <td></td><td></td>
+      <!-- Fri empty -->
+      <td></td><td></td><td></td>
+    </tr>
+    <tr><td class="week_separatorcell">10:15</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  </tbody>
+</table>
+</body>
+</html>
