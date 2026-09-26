@@ -43,7 +43,7 @@ python3 main.py --weeks 12 --start-date 2026-01-09 --output dhbw_tinfo25.ics
 ### 2. Live server (recommended):
 Rapla does not provide an iCalendar subscription URL, so calendar apps like Outlook, Google Calendar, and Apple Calendar have no way to subscribe directly. This mode solves that by running a local HTTP server that exposes a subscription URL (`http://localhost:8080/calendar.ics`) which calendar apps can subscribe to and poll for updates automatically. Any change in Rapla then appears in your calendar within a few hours.
 
-**Important:** Simply opening the URL in a browser does nothing useful. The URL must be added as a calendar subscription (see instructions below). ***The server must also be running on your laptop whenever you want your calendar to sync.
+**Important:** Simply opening the URL in a browser does nothing useful. The URL must be added as a calendar subscription (see instructions below). **The server must also be running on your laptop whenever you want your calendar to sync.**
 
 ```bash
 python3 server.py --weeks 12 --start-date 2026-01-09

@@ -11,3 +11,7 @@ venv/
 
 # macOS
 .DS_Store
+
+# Audit outputs (generated; not source)
+v*_AUDIT_REPORT.md
+AUDIT_ACTIONS.md
