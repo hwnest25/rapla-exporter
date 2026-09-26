@@ -39,7 +39,12 @@ FIRST_DAY_COL = 1  # 0 = time label column
 # HTTP fetching
 # ---------------------------------------------------------------------------
 
-def fetch_page(start_date: date, pages: int = 1) -> str:
+def fetch_page(
+    start_date: date,
+    pages: int = 1,
+    user: str = DEFAULT_USER,
+    file: str = DEFAULT_FILE,
+) -> str:
     """
     Fetch one HTML page of the Rapla calendar.
 
@@ -52,8 +57,8 @@ def fetch_page(start_date: date, pages: int = 1) -> str:
     safely (e.g. spaces to %20, '@' to %40).
     """
     params = {
-        "user": DEFAULT_USER,
-        "file": DEFAULT_FILE,
+        "user": user,
+        "file": file,
         "day": start_date.day,
         "month": start_date.month,
         "year": start_date.year,
@@ -234,13 +239,13 @@ def _resolve_cell_columns(table) -> list[tuple]:
 # Public API
 # ---------------------------------------------------------------------------
 
-def scrape_week(start_date: date) -> list[dict]:
+def scrape_week(start_date: date, user: str = DEFAULT_USER, file: str = DEFAULT_FILE) -> list[dict]:
     """
     Fetch and parse one week of the Rapla calendar starting at `start_date`.
     Returns a list of event dicts:
         {"title": str, "location": str, "start": datetime, "end": datetime}
     """
-    html = fetch_page(start_date)
+    html = fetch_page(start_date, user=user, file=file)
     soup = BeautifulSoup(html, "html.parser")
 
     col_to_date = _parse_date_headers(soup, start_date.year)
@@ -272,7 +277,7 @@ def scrape_week(start_date: date) -> list[dict]:
     return events
 
 
-def scrape_weeks(start_date: date, num_weeks: int) -> list[dict]:
+def scrape_weeks(start_date: date, num_weeks: int, user: str = DEFAULT_USER, file: str = DEFAULT_FILE) -> list[dict]:
     """
     Scrape `num_weeks` consecutive weeks beginning at `start_date`.
     Iterates by advancing 7 days per week.
@@ -285,7 +290,7 @@ def scrape_weeks(start_date: date, num_weeks: int) -> list[dict]:
     current = start_date
     for _ in range(num_weeks):
         print(f"  Fetching week of {current.isoformat()} ...")
-        week_events = scrape_week(current)
+        week_events = scrape_week(current, user=user, file=file)
         for event in week_events:
             key = (event["title"], event["start"])
             if key not in seen:

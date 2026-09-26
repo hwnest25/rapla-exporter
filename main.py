@@ -21,7 +21,7 @@ import argparse
 import sys
 from datetime import date, datetime
 
-from scraper import scrape_weeks
+from scraper import scrape_weeks, DEFAULT_USER, DEFAULT_FILE
 from exporter import write_ics
 
 
@@ -50,6 +50,18 @@ def parse_args():
         metavar="FILE",
         help="Output .ics filename (default: dhbw_tinfo25.ics)",
     )
+    parser.add_argument(
+        "--user",
+        default=DEFAULT_USER,
+        metavar="EMAIL",
+        help=f"Rapla user parameter (default: {DEFAULT_USER})",
+    )
+    parser.add_argument(
+        "--file",
+        default=DEFAULT_FILE,
+        metavar="NAME",
+        help=f"Rapla file parameter (default: {DEFAULT_FILE})",
+    )
     return parser.parse_args()
 
 
@@ -60,11 +72,13 @@ def main():
     print(f"  Start date : {args.start_date.isoformat()}")
     print(f"  Weeks      : {args.weeks}")
     print(f"  Output     : {args.output}")
+    print(f"  User       : {args.user}")
+    print(f"  File       : {args.file}")
     print()
 
     print("Fetching calendar data from rapla.dhbw.de ...")
     try:
-        events = scrape_weeks(args.start_date, args.weeks)
+        events = scrape_weeks(args.start_date, args.weeks, user=args.user, file=args.file)
     except Exception as e:
         print(f"Error fetching calendar: {e}", file=sys.stderr)
         sys.exit(1)

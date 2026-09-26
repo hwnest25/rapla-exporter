@@ -28,7 +28,7 @@ from datetime import date, datetime
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
 from exporter import build_calendar
-from scraper import scrape_weeks
+from scraper import scrape_weeks, DEFAULT_USER, DEFAULT_FILE
 
 # ---------------------------------------------------------------------------
 # Defaults
@@ -58,6 +58,8 @@ class RaplaHandler(BaseHTTPRequestHandler):
     # handler instance can access the CLI arguments without globals.
     start_date: date = None
     num_weeks: int = DEFAULT_WEEKS
+    rapla_user: str = DEFAULT_USER
+    rapla_file: str = DEFAULT_FILE
 
     def do_GET(self):
         if self.path != CALENDAR_PATH:
@@ -66,7 +68,7 @@ class RaplaHandler(BaseHTTPRequestHandler):
 
         print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] Outlook polled. Scraping Rapla ...")
         try:
-            events = scrape_weeks(self.start_date, self.num_weeks)
+            events = scrape_weeks(self.start_date, self.num_weeks, user=self.rapla_user, file=self.rapla_file)
             events.sort(key=lambda e: e["start"])
             cal_bytes = build_calendar(events).to_ical()
             self._send(200, "text/calendar; charset=utf-8", cal_bytes)
@@ -117,10 +119,22 @@ def parse_args():
         metavar="YYYY-MM-DD",
         help="First day to export from (default: today)",
     )
+    parser.add_argument(
+        "--user",
+        default=DEFAULT_USER,
+        metavar="EMAIL",
+        help=f"Rapla user parameter (default: {DEFAULT_USER})",
+    )
+    parser.add_argument(
+        "--file",
+        default=DEFAULT_FILE,
+        metavar="NAME",
+        help=f"Rapla file parameter (default: {DEFAULT_FILE})",
+    )
     return parser.parse_args()
 
 
-def make_handler(start_date: date, num_weeks: int):
+def make_handler(start_date: date, num_weeks: int, rapla_user: str, rapla_file: str):
     """
     CS Concept --> Factory Function / Closure: HTTPServer requires a handler
     class, not an instance, so we cannot pass arguments via __init__. Instead,
@@ -133,13 +147,15 @@ def make_handler(start_date: date, num_weeks: int):
 
     ConfiguredHandler.start_date = start_date
     ConfiguredHandler.num_weeks = num_weeks
+    ConfiguredHandler.rapla_user = rapla_user
+    ConfiguredHandler.rapla_file = rapla_file
     return ConfiguredHandler
 
 
 def main():
     args = parse_args()
 
-    handler_class = make_handler(args.start_date, args.weeks)
+    handler_class = make_handler(args.start_date, args.weeks, args.user, args.file)
     server = HTTPServer(("localhost", args.port), handler_class)
 
     url = f"http://localhost:{args.port}{CALENDAR_PATH}"
