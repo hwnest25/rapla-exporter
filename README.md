@@ -85,7 +85,16 @@ rapla-exporter/
 ├── server.py        — Local HTTP server for live calendar subscription
 ├── scraper.py       — Fetches and parses the Rapla HTML calendar
 ├── exporter.py      — Converts parsed events to RFC 5545 iCalendar format
-└── requirements.txt — Python dependencies
+├── requirements.txt — Python dependencies
+├── docs/
+│   ├── index.html             — GitHub Pages landing page
+│   └── dhbw_tinfo25.ics       — Published calendar feed (updated by CI)
+├── tests/
+│   ├── test_scraper.py        — Offline unit tests (pytest)
+│   ├── fixture_week.html      — Synthetic Rapla HTML for a normal week
+│   └── fixture_year_wrap.html — Edge-case fixture for Dec→Jan year wrap
+└── .github/workflows/
+    └── update_calendar.yml    — Weekly scrape + GitHub Pages deployment
 ```
 
 ---
@@ -115,8 +124,48 @@ Each event's UID is derived from its title and start time using UUID version 5. 
 
 ---
 
+## Hosted calendar feed (GitHub Actions + GitHub Pages)
+
+The repo includes a GitHub Actions workflow that scrapes Rapla on a weekly schedule and publishes a fresh `.ics` file to GitHub Pages. This gives you a **stable public subscription URL** — no laptop required.
+
+### How it works
+
+1. Every Sunday at 03:00 UTC, the workflow runs `main.py` and writes the result to `docs/dhbw_tinfo25.ics`.
+2. If the calendar changed, it commits the new file and pushes.
+3. GitHub Pages serves the file at:
+
+   ```
+   https://YOUR_GITHUB_USERNAME.github.io/rapla-exporter/dhbw_tinfo25.ics
+   ```
+
+4. You add that URL **once** as a calendar subscription. Your app polls it automatically and applies only the diff — no duplicates.
+
+You can also trigger a manual update at any time via **Actions → Update calendar → Run workflow**.
+
+### Setup (one-time)
+
+**1. Add secrets**
+
+Go to your repo → Settings → Secrets and variables → Actions → New repository secret.
+
+Add two secrets:
+
+| Name | Value |
+|------|-------|
+| `RAPLA_USER` | The Rapla user email (e.g. `Britta.konrath@intern.mosbach.dhbw.de`) |
+| `RAPLA_FILE` | The Rapla file name (e.g. `Vorlesungsplan TINFO25`) |
+
+**2. Enable GitHub Pages**
+
+Go to your repo → Settings → Pages → Source → select **GitHub Actions**.
+
+**3. Subscribe in your calendar app**
+
+Replace `YOUR_GITHUB_USERNAME` with your actual username in the URL above, then add it as an internet calendar subscription (see [Usage](#usage-there-are-two-modes) above for app-specific steps).
+
+---
+
 ## Limitations
 
-- The server must be running on your machine for your Outlook or other calendar of choice to sync. It is not a hosted service.
 - If Rapla's HTML structure changes, the parser may need to be updated.
-- The calendar user and file name are currently hardcoded in `scraper.py` for the TINFO25 cohort. To use with a different cohort, update `DEFAULT_USER` and `DEFAULT_FILE` at the top of that file.
+- The hosted feed refreshes weekly. For same-day changes, trigger a manual run from the Actions tab or run `main.py` locally.

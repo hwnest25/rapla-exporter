@@ -1,0 +1,67 @@
+name: Update calendar
+
+on:
+  schedule:
+    # Every Sunday at 03:00 UTC (quiet time, Rapla is unlikely to be under load)
+    - cron: "0 3 * * 0"
+  workflow_dispatch:
+    # Also allows a manual "Run workflow" trigger from the GitHub Actions UI,
+    # useful for forcing an update immediately (e.g. after a Rapla change).
+
+jobs:
+  scrape-and-publish:
+    runs-on: ubuntu-latest
+
+    # Required for the job to push a commit back to the repo and for
+    # GitHub Pages deployment.
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Scrape Rapla and write .ics
+        env:
+          RAPLA_USER: ${{ secrets.RAPLA_USER }}
+          RAPLA_FILE: ${{ secrets.RAPLA_FILE }}
+        run: |
+          python main.py \
+            --weeks 16 \
+            --user "$RAPLA_USER" \
+            --file "$RAPLA_FILE" \
+            --output docs/dhbw_tinfo25.ics
+
+      - name: Commit updated .ics if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/dhbw_tinfo25.ics
+          # Only commit when the file actually changed — avoids noise commits
+          # when Rapla had no updates since the last run.
+          if git diff --staged --quiet; then
+            echo "No changes to the calendar since last run. Nothing to commit."
+          else
+            git commit -m "chore: update calendar $(date -u +%Y-%m-%d)"
+            git push
+          fi
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Serve everything in docs/ via GitHub Pages.
+          path: docs/
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4

@@ -6,8 +6,10 @@ __pycache__/
 venv/
 .venv/
 
-# Generated output
+# Generated output — exclude local .ics files everywhere except docs/
+# (docs/dhbw_tinfo25.ics is the published Pages artifact and must be tracked)
 *.ics
+!docs/*.ics
 
 # macOS
 .DS_Store
