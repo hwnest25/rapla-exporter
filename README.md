@@ -135,7 +135,7 @@ The repo includes a GitHub Actions workflow that scrapes Rapla on a weekly sched
 3. GitHub Pages serves the file at:
 
    ```
-   https://YOUR_GITHUB_USERNAME.github.io/rapla-exporter/dhbw_tinfo25.ics
+   https://hwnest25.github.io/rapla-exporter/dhbw_tinfo25.ics
    ```
 
 4. You add that URL **once** as a calendar subscription. Your app polls it automatically and applies only the diff — no duplicates.
@@ -161,7 +161,7 @@ Go to your repo → Settings → Pages → Source → select **GitHub Actions**.
 
 **3. Subscribe in your calendar app**
 
-Replace `YOUR_GITHUB_USERNAME` with your actual username in the URL above, then add it as an internet calendar subscription (see [Usage](#usage-there-are-two-modes) above for app-specific steps).
+Add `https://hwnest25.github.io/rapla-exporter/dhbw_tinfo25.ics` as an internet calendar subscription (see [Usage](#usage-there-are-two-modes) above for app-specific steps).
 
 ---
 
